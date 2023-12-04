@@ -43,6 +43,34 @@ public class NumberAvecPosAutour {
         return false;
     }
 
+    public boolean isAroundGear(char[][] table){
+        for(Point p : arrayList){
+            if(p.getY() < 140 &&
+                    p.getY() >= 0 &&
+                    p.getX() < 140 &&
+                    p.getX() >= 0 &&
+                    Pattern.compile ("[*]").matcher(String.valueOf(table[(int) p.getY()][(int) p.getX()])).matches()){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public Point getGearPosition(char[][] table) throws Exception {
+        for(Point p : arrayList){
+            if(p.getY() < 140 &&
+                    p.getY() >= 0 &&
+                    p.getX() < 140 &&
+                    p.getX() >= 0 &&
+                    Pattern.compile ("[*]").matcher(String.valueOf(table[(int) p.getY()][(int) p.getX()])).matches()){
+                return p;
+            }
+        }
+        throw new Exception();
+    }
+
+
+
     @Override
     public String toString() {
         return "NumberAvecPosAutour{" +
