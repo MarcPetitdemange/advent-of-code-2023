@@ -1,4 +1,4 @@
-package org.adventofcode;
+package org.adventofcode.ex2023;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -9,10 +9,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Exercice2_2 {
-
-   private static final int MAX_RED_C = 12;
-   private static final int MAX_GREEN_C = 13;
-   private static final int MAX_BLUE_C = 14;
+   
 
    public static void main(String[] args) throws IOException {
       InputStream resource = Exercice2_2.class.getResourceAsStream("/Exercice_2.txt");
