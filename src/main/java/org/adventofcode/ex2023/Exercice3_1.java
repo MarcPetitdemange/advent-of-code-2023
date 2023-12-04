@@ -1,12 +1,19 @@
 package org.adventofcode.ex2023;
 
+import org.adventofcode.classes.NumberAvecPosAutour;
+
+import java.awt.*;
+import java.awt.geom.Point2D;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class Exercice3_1 {
     
@@ -22,7 +29,6 @@ public class Exercice3_1 {
         int x = 0;
         int y = 0;
         while((line = bf.readLine()) != null){
-            System.out.println("x : " + x + " y : " + y);
             for(char c : line.toCharArray()){
                 table[y][x] = c;
                 x++;
@@ -31,6 +37,7 @@ public class Exercice3_1 {
             y++;
         }
         printTable(table);
+        analyzeTable(table);
     }
     
     public static void printTable(char[][] table){
@@ -40,19 +47,54 @@ public class Exercice3_1 {
             }
             System.out.print("\n");
         }
+        System.out.println("---------------------------------------------------------------");
     }
     
     public static void analyzeTable(char[][] table){
-        for(int x = 0; x <= 140; x++){
-            for (int y = 0; y <= 140; y++){
-            
+        ArrayList<NumberAvecPosAutour> arrayList = new ArrayList<NumberAvecPosAutour>();
+        for(int y = 0; y < 140; y++){
+            StringBuilder nombre = new StringBuilder();
+            NumberAvecPosAutour numberAvecPosAutour = new NumberAvecPosAutour();
+            char lastChar = table[y][0];
+            for (int x = 1; x < 140; x++){
+                if(!Character.isDigit(lastChar)){
+                    nombre.setLength(0);
+                    numberAvecPosAutour = new NumberAvecPosAutour();
+                }
+
+                if(Character.isDigit(table[y][x])){
+                    nombre.append(table[y][x]);
+                    numberAvecPosAutour.getArrayList().addAll(
+                            List.of(new Point[]{
+                                    new Point(x - 1, y),
+                                    new Point(x - 1, y - 1),
+                                    new Point(x - 1, y + 1),
+                                    new Point(x, y + 1),
+                                    new Point(x, y - 1),
+                                    new Point(x + 1, y),
+                                    new Point(x + 1, y - 1),
+                                    new Point(x + 1, y + 1)
+                                    ,})
+                    );
+                }
+
+                if(Character.isDigit(lastChar) && !Character.isDigit(table[y][x])){
+                    numberAvecPosAutour.setNumber(Integer.parseInt(nombre.toString()));
+                    arrayList.add(numberAvecPosAutour);
+                }
+                lastChar = table[y][x];
             }
         }
+
+        List<Integer> list = arrayList.stream().filter(x -> x.isAroundSymbol(table)).toList().stream().map(NumberAvecPosAutour::getNumber).toList();
+
+        System.out.println("Valeur finale " + list.stream().reduce(0,Integer::sum));
     }
-    
-    public static extractNumberWithPosition(){
-    
-    }
+
+//    public static ArrayList<Point2D> calcCoordAutour(int x, int y){
+//        if(x < 139){
+//        }
+//    }
     
     
 }
