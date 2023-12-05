@@ -3,27 +3,22 @@ package org.adventofcode.ex2023;
 import org.adventofcode.classes.NumberAvecPosAutour;
 
 import java.awt.*;
-import java.awt.geom.Point2D;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
-import org.adventofcode.ex2023.classes.NumberAndNewX;
-
-public class Exercice3_1 {
+public class Exercice3_2 {
     
     private static final int X_MAX = 140;
     private static final int Y_MAX = 140;
     
-    public static void main(String[] args) throws IOException {
-        String table[][] = new String[X_MAX][Y_MAX];
+    public static void main(String[] args) throws Exception {
+        char table[][] = new char[X_MAX][Y_MAX];
         
         InputStream resource = Exercice2_1.class.getResourceAsStream("/Exercice_3.txt");
         BufferedReader bf = new BufferedReader(new InputStreamReader(Objects.requireNonNull(resource)));
@@ -32,19 +27,18 @@ public class Exercice3_1 {
         int y = 0;
         while((line = bf.readLine()) != null){
             for(char c : line.toCharArray()){
-                table[y][x] = String.valueOf(c);
+                table[y][x] = c;
                 x++;
             }
             x = 0;
             y++;
         }
-//        printTable(table);
         analyzeTable(table);
     }
     
-    public static void printTable(String[][] table){
-        for(String[] line : table){
-            for(String character : line){
+    public static void printTable(char[][] table){
+        for(char[] line : table){
+            for(char character : line){
                 System.out.print(character);
             }
             System.out.print("\n");
@@ -52,7 +46,7 @@ public class Exercice3_1 {
         System.out.println("---------------------------------------------------------------");
     }
     
-    public static void analyzeTable(char[][] table){
+    public static void analyzeTable(char[][] table) throws Exception {
         ArrayList<NumberAvecPosAutour> arrayList = new ArrayList<NumberAvecPosAutour>();
         for(int y = 0; y < 140; y++){
             StringBuilder nombre = new StringBuilder();
@@ -110,11 +104,27 @@ public class Exercice3_1 {
             }
         }
 
-        List<Integer> list = arrayList.stream().filter(x -> x.isAroundSymbol(table)).toList().stream().map(NumberAvecPosAutour::getNumber).toList();
+        List<NumberAvecPosAutour> list = arrayList.stream().filter(x -> x.isAroundGear(table)).toList();
+
+        HashMap<Point, NumberAvecPosAutour> hashMap = new HashMap<>();
+        List<Integer> futureSomme = new ArrayList<>();
+
+        for(NumberAvecPosAutour nbp : list){
+            Point p = nbp.getGearPosition(table);
+            NumberAvecPosAutour previousPoint = hashMap.get(p);
+            if(previousPoint == null){
+                hashMap.put(p,nbp);
+            } else if(nbp != previousPoint) {
+                System.out.println("Current point : " + nbp.getNumber() + " Previous point : " + previousPoint.getNumber());
+                futureSomme.add(nbp.getNumber() * previousPoint.getNumber());
+            }
+        }
+
 
         System.out.println("Liste des nombres non filtrée : " + arrayList);
         System.out.println("Liste des nombres finale " + list);
-        System.out.println("Valeur finale " + list.stream().reduce(0,Integer::sum));
+        System.out.println("Valeur finale " + futureSomme.stream().reduce(0,Integer::sum));
     }
-    
+
+
 }
