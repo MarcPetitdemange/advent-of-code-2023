@@ -17,34 +17,32 @@ public class Exercice4_2 {
     public static void main(String[] args) throws Exception {
         ArrayList<Integer> gameResults = new ArrayList();
         
-        InputStream resource = Exercice2_1.class.getResourceAsStream("/Exercice_4.txt");
+        InputStream resource = Exercice2_1.class.getResourceAsStream("/Exercice_4_text.txt");
         BufferedReader bf = new BufferedReader(new InputStreamReader(Objects.requireNonNull(resource)));
         String line;
         
         HashMap<Integer, Integer> countInstanceForEachGame = new HashMap<Integer, Integer>();
         
-        while((line = bf.readLine()) != null){
-            String regexAftl = "\\| (?<afterLane>(\\d+|\\s)+)$";
-            
-            gameResults.add(analyzeGame(line, countInstanceForEachGame));
+        for(int i = 1; i <= 218;i++){
+            countInstanceForEachGame.putIfAbsent(i, 1);
         }
         
-       System.out.println("RESULTAT FINAL : " + gameResults.stream().reduce(0, Integer::sum));
+        while((line = bf.readLine()) != null){
+            String regexAftl = "\\| (?<afterLane>(\\d+|\\s)+)$";
+            analyzeGame(line, countInstanceForEachGame);
+        }
+        
+        
+        System.out.println("List count instance : " + countInstanceForEachGame.values().stream().reduce(Integer::sum));
         
     }
     
-    private static int analyzeGame(String line, HashMap<Integer, Integer> countInstanceForEachGame) {
+    private static void analyzeGame(String line, HashMap<Integer, Integer> countInstanceForEachGame) {
         
         String noCardPattern = "(Card(\\s+)(?<noCard>\\d+):)";
         Matcher noCardMatcher = Pattern.compile(noCardPattern).matcher(line);
         noCardMatcher.find();
         Integer noCard = Integer.valueOf(noCardMatcher.group("noCard"));
-        
-        Integer numberOfInstanceForCurrentGame = 1;
-        if(countInstanceForEachGame.get(noCard) != null){
-            numberOfInstanceForCurrentGame = countInstanceForEachGame.get(noCard);
-        }
-        countInstanceForEachGame.put(noCard, numberOfInstanceForCurrentGame);
         
         
         String regexAftl = "\\| (?<afterLane>(\\d+|\\s)+)$";
@@ -63,16 +61,19 @@ public class Exercice4_2 {
         List<Integer> matchings = aftlInts.stream().filter(bflInts::contains).toList();
         
         System.out.println("\n\nNO CARD : " + noCard);
+//
+//        System.out.println("bf lane : " + bflInts);
+//        System.out.println("aft lane " + aftlInts);
+//        System.out.println("matchings " + matchings);
         
-        System.out.println("bf lane : " + bflInts);
-        System.out.println("aft lane " + aftlInts);
-        System.out.println("matchings " + matchings);
-        
-        
-        int result = (int) Math.pow(2,matchings.size()-1);
-        System.out.println("result " + result);
-        
-        return result;
+        System.out.println("Refresh for card n° " + noCard + " : matching " + matchings.size());
+        for(int i = noCard; i <= matchings.size(); i++){
+            int noNextCard = noCard + i;
+            if(i < 219){
+                countInstanceForEachGame.compute(noNextCard, (k,v) -> v * 2);
+                System.out.println("n°" + noNextCard + " --> " + countInstanceForEachGame.get(noNextCard) );
+            }
+        }
     }
     
 }
