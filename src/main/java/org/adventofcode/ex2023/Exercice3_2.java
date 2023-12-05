@@ -53,11 +53,11 @@ public class Exercice3_2 {
             NumberAvecPosAutour numberAvecPosAutour = new NumberAvecPosAutour();
             char lastChar = table[y][0];
             for (int x = 1; x < 140; x++){
-
+                
                 if(y == 102 && x > 0){
                     System.out.println(table[y][x]);
                 }
-
+                
                 if(!Character.isDigit(lastChar)){
                     nombre.setLength(0);
                     numberAvecPosAutour = new NumberAvecPosAutour();
@@ -78,8 +78,8 @@ public class Exercice3_2 {
                                     ,})
                     );
                 }
-
-
+                
+                
                 if(Character.isDigit(table[y][x])){
                     nombre.append(table[y][x]);
                     numberAvecPosAutour.getArrayList().addAll(
@@ -95,7 +95,7 @@ public class Exercice3_2 {
                                     ,})
                     );
                 }
-
+                
                 if(Character.isDigit(lastChar) && (!Character.isDigit(table[y][x]) || x == 139)){
                     numberAvecPosAutour.setNumber(Integer.parseInt(nombre.toString()));
                     arrayList.add(numberAvecPosAutour);
@@ -103,12 +103,12 @@ public class Exercice3_2 {
                 lastChar = table[y][x];
             }
         }
-
+        
         List<NumberAvecPosAutour> list = arrayList.stream().filter(x -> x.isAroundGear(table)).toList();
-
+        
         HashMap<Point, NumberAvecPosAutour> hashMap = new HashMap<>();
         List<Integer> futureSomme = new ArrayList<>();
-
+        
         for(NumberAvecPosAutour nbp : list){
             Point p = nbp.getGearPosition(table);
             NumberAvecPosAutour previousPoint = hashMap.get(p);
@@ -119,12 +119,12 @@ public class Exercice3_2 {
                 futureSomme.add(nbp.getNumber() * previousPoint.getNumber());
             }
         }
-
-
+        
+        
         System.out.println("Liste des nombres non filtrée : " + arrayList);
         System.out.println("Liste des nombres finale " + list);
         System.out.println("Valeur finale " + futureSomme.stream().reduce(0,Integer::sum));
     }
-
-
+    
+    
 }

@@ -15,15 +15,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import org.adventofcode.ex2023.classes.NumberAndNewX;
-
 public class Exercice3_1 {
     
     private static final int X_MAX = 140;
     private static final int Y_MAX = 140;
     
     public static void main(String[] args) throws IOException {
-        String table[][] = new String[X_MAX][Y_MAX];
+        char table[][] = new char[X_MAX][Y_MAX];
         
         InputStream resource = Exercice2_1.class.getResourceAsStream("/Exercice_3.txt");
         BufferedReader bf = new BufferedReader(new InputStreamReader(Objects.requireNonNull(resource)));
@@ -32,7 +30,7 @@ public class Exercice3_1 {
         int y = 0;
         while((line = bf.readLine()) != null){
             for(char c : line.toCharArray()){
-                table[y][x] = String.valueOf(c);
+                table[y][x] = c;
                 x++;
             }
             x = 0;
@@ -42,9 +40,9 @@ public class Exercice3_1 {
         analyzeTable(table);
     }
     
-    public static void printTable(String[][] table){
-        for(String[] line : table){
-            for(String character : line){
+    public static void printTable(char[][] table){
+        for(char[] line : table){
+            for(char character : line){
                 System.out.print(character);
             }
             System.out.print("\n");
@@ -59,11 +57,11 @@ public class Exercice3_1 {
             NumberAvecPosAutour numberAvecPosAutour = new NumberAvecPosAutour();
             char lastChar = table[y][0];
             for (int x = 1; x < 140; x++){
-
+                
                 if(y == 102 && x > 0){
                     System.out.println(table[y][x]);
                 }
-
+                
                 if(!Character.isDigit(lastChar)){
                     nombre.setLength(0);
                     numberAvecPosAutour = new NumberAvecPosAutour();
@@ -84,8 +82,8 @@ public class Exercice3_1 {
                                     ,})
                     );
                 }
-
-
+                
+                
                 if(Character.isDigit(table[y][x])){
                     nombre.append(table[y][x]);
                     numberAvecPosAutour.getArrayList().addAll(
@@ -101,7 +99,7 @@ public class Exercice3_1 {
                                     ,})
                     );
                 }
-
+                
                 if(Character.isDigit(lastChar) && (!Character.isDigit(table[y][x]) || x == 139)){
                     numberAvecPosAutour.setNumber(Integer.parseInt(nombre.toString()));
                     arrayList.add(numberAvecPosAutour);
@@ -109,9 +107,9 @@ public class Exercice3_1 {
                 lastChar = table[y][x];
             }
         }
-
+        
         List<Integer> list = arrayList.stream().filter(x -> x.isAroundSymbol(table)).toList().stream().map(NumberAvecPosAutour::getNumber).toList();
-
+        
         System.out.println("Liste des nombres non filtrée : " + arrayList);
         System.out.println("Liste des nombres finale " + list);
         System.out.println("Valeur finale " + list.stream().reduce(0,Integer::sum));
